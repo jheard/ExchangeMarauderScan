@@ -55,7 +55,7 @@ If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\Ht
 }
 write "[-] Checking for CVE-2021-26858 exploitation"
 # CVE-2021-26858 exploitation can be detected via the Exchange log files
-If ( Test-Path -Path "%PROGRAMFILES%\Microsoft\Exchange Server\V15\Logging\OABGeneratorLog\*.log" ) {
+If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\OABGeneratorLog\*.log" ) {
     $logs_26858 = findstr /snip /c:"Download failed and temporary file" "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\OABGeneratorLog\*.log"
     if ($logs_26858.Length -gt 0) {
         write "[!] Savings signs of CVE-2021-26858 exploitation"
