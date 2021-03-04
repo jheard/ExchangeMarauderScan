@@ -104,3 +104,4 @@ If ($output.Count -gt 0) {
     write "[*] No results found."
     If ($cleanup) { Remove-Item $outputpath -Recurse }
 }
+
