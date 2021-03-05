@@ -95,7 +95,7 @@ $output = Get-ChildItem -Path $outputpath | Where-Object { $_.Length -gt 0 }
 
 If ($output.Count -gt 0) {
     write "[!] Results found, files and logs have been zipped for further analysis"
-    write "[!] Please submit the zip file to the service desk"
+    write "[!] Please upload the zip file to the service desk ticket."
     $output | Compress-Archive -Force @compress
     If ($aspx.Count -gt 0) {
         $aspx | Compress-Archive -Update @compress
@@ -105,6 +105,6 @@ If ($output.Count -gt 0) {
         $potential_exfil | Compress-Archive -Update @compress
     }
 } else {
-    write "[*] No results found."
+    write "[*] No results found. Please update the service desk ticket."
     If ($cleanup) { Remove-Item $outputpath -Recurse }
 }
