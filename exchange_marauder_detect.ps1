@@ -49,7 +49,7 @@ write "[-] Checking for CVE-2021-26855 exploitation"
 If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\HttpProxy" ) {
     (Get-ChildItem -Recurse -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\HttpProxy" -Filter '*.log').FullName | %{ 
         Write-Output $_
-        $logs += Import-Csv -Path $_ | Where-Object {  $_.AuthenticatedUser -eq '' -and $_.AnchorMailbox -like 'ServerInfo~*/*'  } | select  DateTime, AnchorMailbox
+        [array] $logs += Import-Csv -Path $_ | Where-Object {  $_.AuthenticatedUser -eq '' -and $_.AnchorMailbox -like 'ServerInfo~*/*'  } | select  DateTime, AnchorMailbox
     }
     if ($logs.Count -gt 0) {
         write "[!] Savings signs of CVE-2021-26855 exploitation"
