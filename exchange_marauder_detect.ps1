@@ -48,7 +48,7 @@ write "[-] Checking for CVE-2021-26855 exploitation"
 # CVE-2021-26855 exploitation can be detected via the following Exchange HttpProxy logs
 If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\HttpProxy" ) {
     (Get-ChildItem -Recurse -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\HttpProxy" -Filter '*.log').FullName | %{ 
-        Write-Output $_
+        write "[-] Checking logfile: $_ "
         [array] $logs += Import-Csv -Path $_ | Where-Object {  $_.AuthenticatedUser -eq '' -and $_.AnchorMailbox -like 'ServerInfo~*/*'  } | select  DateTime, AnchorMailbox
     }
     if ($logs.Count -gt 0) {
@@ -95,6 +95,7 @@ $output = Get-ChildItem -Path $outputpath | Where-Object { $_.Length -gt 0 }
 
 If ($output.Count -gt 0) {
     write "[!] Results found, files and logs have been zipped for further analysis"
+    write "[!] Please submit the zip file to the service desk"
     $output | Compress-Archive -Force @compress
     If ($aspx.Count -gt 0) {
         $aspx | Compress-Archive -Update @compress
@@ -107,4 +108,3 @@ If ($output.Count -gt 0) {
     write "[*] No results found."
     If ($cleanup) { Remove-Item $outputpath -Recurse }
 }
-
