@@ -12,4 +12,5 @@ The script utilizes IOC's from Microsoft Security [blog](https://www.microsoft.c
 6. .\exchange_marauder_detect.ps1
 
 **If the script returns results, there will be a zip file in C:\ScriptFiles\output\ directory.**
+
 If no results were found, the output directory will not exist.
