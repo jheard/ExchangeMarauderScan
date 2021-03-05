@@ -52,7 +52,7 @@ If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\Ht
         [array] $logs += Import-Csv -Path $_ | Where-Object {  $_.AuthenticatedUser -eq '' -and $_.AnchorMailbox -like 'ServerInfo~*/*'  } | select  DateTime, AnchorMailbox
     }
     if ($logs.Count -gt 0) {
-        write "[!] Savings signs of CVE-2021-26855 exploitation"
+        write "[!] Saving signs of CVE-2021-26855 exploitation"
         $logs | Export-csv -Path $outputpath\cve-2021-26855.csv 
     }
 }
@@ -61,7 +61,7 @@ write "[-] Checking for CVE-2021-26858 exploitation"
 If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\OABGeneratorLog\*.log" ) {
     $logs_26858 = findstr /snip /c:"Download failed and temporary file" "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\OABGeneratorLog\*.log"
     if ($logs_26858.Length -gt 0) {
-        write "[!] Savings signs of CVE-2021-26858 exploitation"
+        write "[!] Saving signs of CVE-2021-26858 exploitation"
         $logs_26858 > $outputpath\cve-2021-26858.txt
     }
 }
@@ -69,7 +69,7 @@ write "[-] Checking for CVE-2021-26857 exploitation"
 # CVE-2021-26857 exploitation can be detected via the Windows Application event logs
 $events = Get-EventLog -LogName Application -Source "MSExchange Unified Messaging" -EntryType Error -ErrorAction SilentlyContinue | Where-Object { $_.Message -like "*System.InvalidCastException*" }
 If ($events.Count -gt 0) {
-    write "[!] Savings signs of CVE-2021-26857 exploitation"
+    write "[!] Saving signs of CVE-2021-26857 exploitation"
     $events  | Export-Csv -Path $outputpath\cve-2021-26857.csv
 }
 
@@ -78,7 +78,7 @@ write "[-] Checking for CVE-2021-27065 exploitation"
 If ( Test-Path -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\ECP\Server\*.log") {
     $logs_27065 = Select-String -Path "$env:PROGRAMFILES\Microsoft\Exchange Server\V15\Logging\ECP\Server\*.log" -Pattern 'Set-.+VirtualDirectory'
     If ($logs_27065.Length -gt 0) {
-        write "[!] Savings signs of CVE-2021-27065 exploitation"
+        write "[!] Saving signs of CVE-2021-27065 exploitation"
         $logs_27065 > $outputpath\cve-2021-27065.txt
     }
 }
