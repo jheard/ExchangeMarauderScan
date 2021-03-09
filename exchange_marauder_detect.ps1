@@ -32,7 +32,7 @@ Write-Output "[-] Checking for any newly created .aspx files"
 # Create a list of all .aspx files created in the last week
 $aspx = $webShell_paths | ForEach-Object{
     If ( Test-Path -Path $_ ) {
-        Get-ChildItem -Path $_ -Filter '*.aspx' | Where-Object { $_.creationTime -ge $time_delay  }
+        Get-ChildItem -Path $_ -Recurse -Filter '*.aspx' | Where-Object { $_.creationTime -ge $time_delay  }
     }
 }
 
