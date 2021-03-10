@@ -32,7 +32,7 @@ Write-Output "[-] Checking for any newly created .aspx files"
 # Create a list of all .aspx files created in the last week
 $aspx = $webShell_paths | ForEach-Object{
     If ( Test-Path -Path $_ ) {
-        Get-ChildItem -Path $_ -Recurse -Filter '*.aspx' | Where-Object { $_.creationTime -ge $time_delay  }
+        Get-ChildItem -Path $_ -Recurse -Filter '*.aspx' -ErrorAction SilentlyContinue | Where-Object { $_.creationTime -ge $time_delay  }
     }
 }
 
@@ -43,8 +43,8 @@ If ($aspx.Count -gt 0) {
 
 Write-Output "[-] Checking for indicators of potential exfiltration"
 # Create a list of all potential exfiltration files
-$potential_exfil = Get-ChildItem -Recurse -Path $exfil_path -Filter $exfil_exts | Where-Object { $_.creationTime -ge $time_delay }
-$potential_exfil += Get-ChildItem -Recurse -Path "$env:WINDIR\temp\lasass.*dmp"
+$potential_exfil = Get-ChildItem -Recurse -Path $exfil_path -Filter $exfil_exts -ErrorAction SilentlyContinue | Where-Object { $_.creationTime -ge $time_delay }
+$potential_exfil += Get-ChildItem -Recurse -Path "$env:WINDIR\temp\lasass.*dmp" -ErrorAction SilentlyContinue
 $potential_exfil += Get-ChildItem -Recurse -Path "c:\root\lsass.*dmp" -ErrorAction SilentlyContinue
 
 
@@ -56,7 +56,7 @@ Write-Output "[-] Checking for CVE-2021-26855 exploitation"
 # CVE-2021-26855 exploitation can be detected via the following Exchange HttpProxy logs
 If ( Test-Path -Path "$exchangepath\Logging\HttpProxy" ) {
     [array] $logs = @()
-    (Get-ChildItem -Recurse -Path "$exchangepath\Logging\HttpProxy" -Filter '*.log').FullName | ForEach-Object{ 
+    (Get-ChildItem -Recurse -Path "$exchangepath\Logging\HttpProxy" -Filter '*.log' -ErrorAction SilentlyContinue).FullName | ForEach-Object{ 
         Write-Output "[-] Checking logfile: $_ "
         $logs += Import-Csv -Path $_ | Where-Object {  $_.AuthenticatedUser -eq '' -and $_.AnchorMailbox -like 'ServerInfo~*/*'  } | Select-Object  -Property DateTime, RequestId, ClientIPAddress, UrlHost, UrlStem, RoutingHint, UserAgent, AnchorMailbox, HttpStatus
     }
